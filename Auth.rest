@@ -1,0 +1,40 @@
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+    "name" : "Ajayantheeswar",
+    "email" : "ajay@new2.com",
+    "password": "ajayantheeswar"
+}
+
+###
+
+POST http://localhost:8080/signin
+Content-Type: application/json
+
+{
+    "name" : "Ajayantheeswar",
+    "email" : "ajay@new1.com",
+    "password": "ajayantheeswar"
+}
+
+###
+POST http://localhost:8080/createlink
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWYwYzZjMmU0OTJjZDdkOGIyMzMwNjc1In0.TTahdBOGxJQWKq5ZBrGibcJtID_slJOfLK27M-sDVp4
+
+{
+    "shortenedURL" : "sasi",
+    "OriginalURL" : "http://twitter.com/"
+}
+
+###
+POST http://localhost:8080/getalllinks
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWYwYzZjMmU0OTJjZDdkOGIyMzMwNjc1In0.TTahdBOGxJQWKq5ZBrGibcJtID_slJOfLK27M-sDVp4
+
+{
+    "shortenedURL" : "ojanci343k",
+    "OriginalURL" : "http://google.co.in/"
+}
+
+###
+GET http://localhost:8080/sasi
