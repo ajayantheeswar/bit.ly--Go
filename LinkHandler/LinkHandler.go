@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Link struct {
@@ -44,6 +45,12 @@ func CreateLink(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"Message": InsertedResult.InsertedID.(primitive.ObjectID).Hex()})
 }
 
+
+type aggregateResult struct {
+	ID string `bson:"_id"`
+	Count int64 `bson:"count"`
+}
+
 func GetAllLinks(c *gin.Context) {
 	var InputRequest Link
 	userID := c.Request.Header.Get("UserId")
@@ -68,39 +75,39 @@ func GetAllLinks(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "err - 53")
 		return
 	}
-	/* var LinksSlice []string
+	var LinksSlice []string
 	for i := 0; i < len(Links); i++ {
 		LinksSlice = append(LinksSlice, Links[i].ShortenedURL)
 	}
 
 	matchStage := bson.D{{"$match", bson.D{{"shortenedURL", bson.D{{"$in", LinksSlice}}}}}}
-	groupStage := bson.D{{"$group" , bson.D{{ "_id" ,"shortenedURL"} , {"count" , bson.D{{ "$sum" , 1 }} }} }}
+	groupStage := bson.D{{"$group" , bson.D{{ "_id" ,"$shortenedURL"} , {"count" , bson.D{{ "$sum" , 1 }} }} }}
 	sortStage  := bson.D{{"$sort" , bson.D{{"shortenedURL", 1}} }}
 
 	result, err = database.Visits.Aggregate(ctx, mongo.Pipeline{matchStage , groupStage,sortStage})
 	
-	var countLinks[] Link
+	var countLinks[] aggregateResult
 
 	if err != nil {
 		panic(err)
 	} else {
-		for result.Next(ctx) {
-			var document Link
-			result.Decode(&document)
-			countLinks = append(countLinks,document)
+		result.All(ctx,&countLinks)
+		for i :=0;i<len(countLinks) ;i++ {
+			for j := 0 ; j<len(Links) ;j++ {
+				if(countLinks[i].ID == Links[j].ShortenedURL){
+					Links[j].Count = countLinks[i].Count
+					continue
+				}
+			}	
 		}
 
-		for i :=0;i<len(Links) ;i++ {
-			Links[i].Count = countLinks[i].Count
-		}
-
-	} */
-
+	} 
+/*
 	for i := 0; i < len(Links); i++ {
 		resultcount,_ := database.Visits.CountDocuments(ctx,bson.M{"shortenedURL" : Links[i].ShortenedURL})
 		Links[i].Count = resultcount
 	} 
-
+*/
 	payload, err := json.Marshal(Links)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "err - 54")
