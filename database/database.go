@@ -20,8 +20,8 @@ func ConnectDatabase (){
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
-	
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://admin:admin@cluster0-shard-00-00-krkj7.mongodb.net:27017,cluster0-shard-00-01-krkj7.mongodb.net:27017,cluster0-shard-00-02-krkj7.mongodb.net:27017/bitly?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"))
+	// CONNECTION STRING HAS BEEN HIDDEN FOR SECURITY PURPOSES.
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("CONNECTION_STRING"))
 
 	Client = client
 	
